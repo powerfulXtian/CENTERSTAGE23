@@ -13,7 +13,7 @@ public class Drive extends OpMode {
     DcMotor rightDrive;
     DcMotor intake;
     DcMotor arm;
-    Servo testServo;
+    Servo claw;
     static final double ticks = 1425.1;
     static final double GEAR_REDUCTION = 5.0;
     boolean runningEncoder = false;
@@ -26,7 +26,7 @@ public class Drive extends OpMode {
         rightDrive = hardwareMap.get(DcMotor.class, "rightDrive");
         intake = hardwareMap.get(DcMotor.class, "intake");
         arm = hardwareMap.get(DcMotor.class, "arm");
-        testServo = hardwareMap.get(Servo.class, "servoTest");
+        claw = hardwareMap.get(Servo.class, "claw");
 
         telemetry.addData("Beep", "Boop");
 
@@ -65,8 +65,7 @@ public class Drive extends OpMode {
         // arm angle variable accounts for gear ratio (20:100, 1:5)
         double armAngle = arm.getCurrentPosition()/5.0;
 
-        // current position of the test servo to make sure it doesn't go more than 1 or less than 0
-        double servoCurPos = testServo.getPosition();
+        telemetry.addData("Servo Position:", claw.getPosition());
 
         if(!runningEncoder) {
             // manual option for the arm
@@ -82,7 +81,7 @@ public class Drive extends OpMode {
             }
         }
 
-        if(gamepad1.a){
+        if(gamepad1.x){
             runningEncoder = true;
 
             int newTarget = -420;
@@ -110,14 +109,13 @@ public class Drive extends OpMode {
             arm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         }
 
-        if(gamepad1.dpad_up) {
-            if (!(servoCurPos == 1.0)) {
-                testServo.setPosition(servoCurPos + 0.5);
-            }
-        }
-        if(gamepad1.dpad_down) {
-            if (!(servoCurPos == 0.0)) {
-                testServo.setPosition(servoCurPos - 0.5);
+        // toggle claw with a button open or closed
+        boolean opened = true;
+        if(gamepad1.a){
+            if(opened){
+                claw.setPosition(1);
+            }else{
+                claw.setPosition(0);
             }
         }
 
