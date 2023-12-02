@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.Servo;
 
 @TeleOp(name = "Drive")
 
@@ -12,6 +13,7 @@ public class Drive extends OpMode {
     DcMotor rightDrive;
     DcMotor intake;
     DcMotor arm;
+    Servo testServo;
     static final double ticks = 1425.1;
     static final double GEAR_REDUCTION = 5.0;
     boolean runningEncoder = false;
@@ -62,6 +64,9 @@ public class Drive extends OpMode {
         // arm angle variable accounts for gear ratio (20:100, 1:5)
         double armAngle = arm.getCurrentPosition()/5.0;
 
+        // current position of the test servo to make sure it doesn't go more than 1 or less than 0
+        double servoCurPos = testServo.getPosition();
+
         if(!runningEncoder) {
             // manual option for the arm
             if (gamepad1.right_bumper) {
@@ -102,6 +107,17 @@ public class Drive extends OpMode {
         if(gamepad1.y){
             arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             arm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        }
+
+        if(gamepad1.dpad_up) {
+            if (!(servoCurPos == 1.0)) {
+                testServo.setPosition(servoCurPos + 0.5);
+            }
+        }
+        if(gamepad1.dpad_down) {
+            if (!(servoCurPos == 0.0)) {
+                testServo.setPosition(servoCurPos - 0.5);
+            }
         }
 
         telemetry.addData("Intake Power", intakePower);
