@@ -26,6 +26,7 @@ public class Drive extends OpMode {
         rightDrive = hardwareMap.get(DcMotor.class, "rightDrive");
         intake = hardwareMap.get(DcMotor.class, "intake");
         arm = hardwareMap.get(DcMotor.class, "arm");
+        testServo = hardwareMap.get(Servo.class, "servoTest");
 
         telemetry.addData("Beep", "Boop");
 
