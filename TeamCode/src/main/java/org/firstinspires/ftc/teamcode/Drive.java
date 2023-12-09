@@ -109,10 +109,8 @@ public class Drive extends OpMode {
             arm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         }
 
-        // toggle claw with a button open or closed
-        boolean opened = true;
         if(gamepad1.a){
-            if(opened){
+            if(claw.getPosition() == 0){
                 claw.setPosition(1);
             }else{
                 claw.setPosition(0);
