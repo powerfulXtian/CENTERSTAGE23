@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.Servo;
 
 @TeleOp(name = "Drive")
 
@@ -12,6 +13,7 @@ public class Drive extends OpMode {
     DcMotor rightDrive;
     DcMotor intake;
     DcMotor arm;
+    Servo claw;
     static final double ticks = 1425.1;
     static final double GEAR_REDUCTION = 5.0;
     boolean runningEncoder = false;
@@ -24,6 +26,7 @@ public class Drive extends OpMode {
         rightDrive = hardwareMap.get(DcMotor.class, "rightDrive");
         intake = hardwareMap.get(DcMotor.class, "intake");
         arm = hardwareMap.get(DcMotor.class, "arm");
+        claw = hardwareMap.get(Servo.class, "claw");
 
         telemetry.addData("Beep", "Boop");
 
@@ -62,6 +65,8 @@ public class Drive extends OpMode {
         // arm angle variable accounts for gear ratio (20:100, 1:5)
         double armAngle = arm.getCurrentPosition()/5.0;
 
+        telemetry.addData("Servo Position:", claw.getPosition());
+
         if(!runningEncoder) {
             // manual option for the arm
             if (gamepad1.right_bumper) {
@@ -76,7 +81,7 @@ public class Drive extends OpMode {
             }
         }
 
-        if(gamepad1.a){
+        if(gamepad1.x){
             runningEncoder = true;
 
             int newTarget = -420;
@@ -102,6 +107,14 @@ public class Drive extends OpMode {
         if(gamepad1.y){
             arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             arm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        }
+
+        if(gamepad1.a){
+            if(claw.getPosition() == 0){
+                claw.setPosition(1);
+            }else{
+                claw.setPosition(0);
+            }
         }
 
         telemetry.addData("Intake Power", intakePower);
