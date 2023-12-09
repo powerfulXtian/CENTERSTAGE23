@@ -43,29 +43,21 @@ public class robotDrive {
         rightDrive.setPower(0);
     }
 
-    public void encoderDrive(double power, double leftInches, double rightInches){
+    public void drive(String dir, double power, int duration) throws InterruptedException {
 
-        int newLeftTarget = leftDrive.getCurrentPosition() + (int)(leftInches * counts_per_inch);
-        int newRightTarget = rightDrive.getCurrentPosition() + (int)(rightInches * counts_per_inch);
-        leftDrive.setTargetPosition(newLeftTarget);
-        rightDrive.setTargetPosition(newRightTarget);
-
-        leftDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        rightDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        if(dir == "reverse"){
+            power = -power;
+        }
 
         leftDrive.setPower(power);
         rightDrive.setPower(power);
 
-        while(true) {
-            if (!leftDrive.isBusy() && !rightDrive.isBusy()) {
-                stopDrive();
-                break;
-            }
-        }
+        Thread.sleep(duration);
+        stopDrive();
     }
 
-    public void turn(boolean left, double power, int duration) throws InterruptedException {
-        if(left){
+    public void turn(String dir, double power, int duration) throws InterruptedException {
+        if(dir == "left"){
             leftDrive.setPower(-power);
             rightDrive.setPower(power);
         }else{
@@ -77,12 +69,11 @@ public class robotDrive {
         stopDrive();
     }
 
-    public void spinIntake(boolean forward, double power, int duration) throws InterruptedException{
-        if(forward){
+    public void spinIntake(String dir, double power, int duration) throws InterruptedException{
+        if(dir == "reverse") {
             intake.setPower(power);
-        }else{
-            intake.setPower(-power);
         }
+
         Thread.sleep(duration);
         intake.setPower(0);
     }
